@@ -61,31 +61,39 @@ if ($('#lf-side-nav').length > 0) {
 }
 
 if ($('.lf-side-nav').length > 0) {
+    let navDir = 'margin-left';
+    if($('html').attr('dir')=='rtl'){
+        navDir = 'margin-right';
+    }
     $('.lf-side-nav li.active').parents('li').addClass('active menu-open');
     // $(window).on("load", function () {
     $(document).on('click', ".lf-side-nav-controller", function () {
-        if ($('.lf-side-nav').hasClass('lf-side-nav-open')) {
+
+        if($('.lf-side-nav').hasClass('lf-side-nav-open')){
             $('.lf-side-nav').removeClass('lf-side-nav-open');
-            if ($('body').hasClass('lf-fixed-sidenav') && $(window).width() >= 992) {
-                $('.wrapper').css('margin-left', '0px');
+            if($('body').hasClass('lf-fixed-sidenav') && $(window).width() >= 992){
+                $('.wrapper').css(navDir,'0px');
             }
-        } else {
+        }
+        else{
             $('.lf-side-nav').addClass('lf-side-nav-open');
-            if ($('body').hasClass('lf-fixed-sidenav') && $(window).width() >= 992) {
-                $('.wrapper').css('margin-left', '280px');
+            if($('body').hasClass('lf-fixed-sidenav') && $(window).width() >= 992){
+                $('.wrapper').css(navDir,'280px');
             }
         }
     });
-    if ($('body').hasClass('lf-fixed-sidenav')) {
-        $(window).on('resize', function () {
-            if ($('.lf-side-nav').hasClass('lf-side-nav-open')) {
-                if ($(window).width() >= 992) {
-                    $('.wrapper').css('margin-left', '280px');
-                } else {
-                    $('.wrapper').css('margin-left', '0px');
+    if($('body').hasClass('lf-fixed-sidenav')){
+        $(window).on('resize', function(){
+            if($('.lf-side-nav').hasClass('lf-side-nav-open')){
+                if($(window).width() >= 992){
+                    $('.wrapper').css(navDir,'280px');
                 }
-            } else {
-                $('.wrapper').css('margin-left', '0px');
+                else{
+                    $('.wrapper').css(navDir,'0px');
+                }
+            }
+            else{
+                $('.wrapper').css(navDir,'0px');
             }
         })
     }

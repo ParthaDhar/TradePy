@@ -1,9 +1,9 @@
 <div class="lf-title">
     <div class="container">
-        <div class="row">
-            <div class="col">
+        <div class="row align-items-center">
+            <div class="{{(isset($isRoute) && has_permission($route)) ? 'col-xl-10 col-lg-9 col-sm-8 col-7' : 'col'}} ">
                 @if(isset($title))
-                <h3>{{$title}}</h3>
+                <h3>{{ ucwords(preg_replace('/[-_]+/', ' ', $title)) }}</h3>
                 @endif
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb">
@@ -19,6 +19,11 @@
                     </ol>
                 </nav>
             </div>
+            @if(isset($isRoute) && has_permission($route))
+                <div class="col-xl-2 col-lg-3 col-sm-4 col-5 text-right">
+                    <a class="btn btn-info {{isset($extraClass)?$extraClass:''}}" href="{{ route($route) }}">{{ __($routeName) }}</a>
+                </div>
+            @endif
         </div>
     </div>
 </div>

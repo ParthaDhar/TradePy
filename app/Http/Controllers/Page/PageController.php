@@ -3,107 +3,30 @@
 namespace App\Http\Controllers\Page;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Page\PageRequest;
-use App\Models\Page\Page;
-use App\Services\Core\DataTableService;
-use Exception;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\View\View;
+use App\Models\Core\Page;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Storage;
 
 class PageController extends Controller
 {
-    protected $attributes;
-
-    public function __construct()
+    public function __invoke(Page $page)
     {
-        $this->setAttributes();
-    }
-
-    public function setAttributes(): void
-    {
-        $this->attributes = [
-            'title',
-            'content',
-            'meta_description',
-            'meta_keywords',
-            'is_published',
-        ];
-    }
-
-    public function index(): View
-    {
-        $searchFields = [
-            ['title', __('Title')],
-            ['slug', __('Slug')],
-        ];
-
-        $orderFields = [
-            ['title', __('Title')],
-            ['slug', __('Slug')],
-            ['is_published', __('Status')],
-        ];
-
-        $data['title'] = __('Pages');
-        $queryBuilder = Page::orderBy('created_at', 'desc');
-
-        $data['dataTable'] = app(DataTableService::class)
-            ->setSearchFields($searchFields)
-            ->setOrderFields($orderFields)
-            ->create($queryBuilder);
-
-        return view('pages.page_management.index', $data);
-    }
-
-    public function create(): View
-    {
-        $data['title'] = __('Page Create');
-        return view('pages.page_management.create', $data);
-    }
-
-    public function store(PageRequest $request): RedirectResponse
-    {
-        $attributes = $request->only($this->attributes);
-
-        $attributes['content'] = $request->get('editor_content');
+        abort_if((empty($page->published_at) || $page->is_home_page), 404);
         try {
-            Page::create($attributes);
-        } catch (Exception $exception) {
-            if ($exception->getCode() == 23000) {
-                return redirect()->back()->withInput()->with(RESPONSE_TYPE_ERROR, __('Failed to create page for duplicate entry!'));
-            }
-            return redirect()->back()->withInput()->with(RESPONSE_TYPE_ERROR, __('Failed to create new page.'));
+            $fallbackLang = Storage::disk('public')->get('page_language/'.$page->id.'/'. config('app.fallback_locale') .'.json');
+            $data['fallbackLang'] = json_decode($fallbackLang, true);
         }
-        return redirect()->route('pages.index')->with(RESPONSE_TYPE_SUCCESS, __('Successfully '));
-    }
-
-    public function edit(Page $page): View
-    {
-        $data['title'] = __('Page Edit');
-        $data['page'] = $page;
-        return view('pages.page_management.edit', $data);
-    }
-
-    public function update(PageRequest $request, Page $page): RedirectResponse
-    {
-        $attributes = $request->only($this->attributes);
-        $attributes['content'] = $request->get('editor_content');
-
+        catch (\Exception $e){
+            abort('404','You do not have default fallback language data');
+        }
         try {
-            $page->update($attributes);
-        } catch (Exception $exception) {
-            if ($exception->getCode() == 23000) {
-                return redirect()->back()->withInput()->with(RESPONSE_TYPE_ERROR, __('Failed to update page for duplicate entry!'));
-            }
-            return redirect()->back()->withInput()->with(RESPONSE_TYPE_ERROR, __('Failed to update page.'));
+            $currentLang = Storage::disk('public')->get('page_language/'.$page->id.'/'. App::getLocale() .'.json');
+            $data['currentLang'] = json_decode($currentLang, true);
         }
-        return redirect()->route('pages.index', $page)->with(RESPONSE_TYPE_SUCCESS, __('Successfully page updated!'));
-    }
-
-    public function destroy(Page $page): RedirectResponse
-    {
-        if ($page->delete()) {
-            return redirect()->back()->with(RESPONSE_TYPE_SUCCESS, __("The page has been deleted successfully."));
+        catch (\Exception $e){
+            $data['currentLang'] = [];
         }
-        return redirect()->back()->with(RESPONSE_TYPE_ERROR, __("Failed to delete the page."));
+        $data['visualPage'] = $page;
+        return view('core.pages.show', $data);
     }
 }

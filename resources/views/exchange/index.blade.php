@@ -23,7 +23,7 @@
                 {{-- end: graph chart --}}
             </div>
             <div
-                class="pb-2 pr-md-2 pr-lg-0 col-md-4 h-463px h-lg-100 col-lg-3 order-3 order-md-2 order-lg-4 overflow-hidden lf-overflow-lg-visible">
+                class="pb-2 pr-md-2 pr-lg-0 col-md-4 h-463px h-lg-100 col-lg-3 order-3 order-md-2 order-lg-4 lf-overflow-lg-visible">
                 {{-- start: markets --}}
                 @include('exchange._markets')
                 {{-- end: markets --}}
@@ -63,6 +63,9 @@
     <script src="{{asset('plugins/charting_library/datafeed/datafeed.js')}}"></script>
     <script src="{{asset('plugins/cvalidator/cvalidator-language-en.js')}}"></script>
     <script src="{{asset('plugins/cvalidator/cvalidator.js')}}"></script>
+    <script>
+        $.fn.dataTable.ext.errMode = 'none';
+    </script>
     @include('exchange._vueInit')
     <script src="{{asset('js/chart.js')}}"></script>
     @include('exchange._market_table_script')

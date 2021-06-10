@@ -96,7 +96,7 @@
                                             </div>
                                         </div>
                                         <a class="btn btn-info btn-sm"
-                                           href="{{route('logout')}}"><i class="fa fa-sign-out"></i> Log out</a>
+                                           href="{{route('logout')}}"><i class="fa fa-sign-out"></i> {{__('Log out')}}</a>
                                     </div>
                                     {{ get_nav('profile-nav', 'profile_dropdown') }}
                                 </div>
@@ -143,4 +143,3 @@
         </div>
     </div>
 </header>
-

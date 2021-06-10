@@ -1,5 +1,6 @@
 @extends('layouts.master',['activeSideNav' => active_side_nav()])
 @section('title', $title)
+@section('route', $isRoute =true, $routeName = 'Add New Post', $route = 'posts.create')
 @section('content')
     <div class="container my-5">
         <div class="row">

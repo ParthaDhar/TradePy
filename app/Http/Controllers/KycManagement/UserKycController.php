@@ -17,6 +17,10 @@ class UserKycController extends Controller
 {
     public function index(): View
     {
+        if(settings('enable_kyc_verification_in_exchange') != ACTIVE){
+            abort('404', "This page is not available at this time");
+        }
+
         $data['user'] = Auth::user();
         $data['title'] = __('Upload ID');
         $data['kycVerification'] = $data['user']->kycVerification(STATUS_VERIFIED)->first();
@@ -24,10 +28,15 @@ class UserKycController extends Controller
             $data['kycVerification'] = $data['user']->kycVerification(STATUS_REVIEWING)->first();
         }
         return view('kyc_management.user.index', $data);
+        
     }
 
     public function store(UserKycVerificationRequest $request)
     {
+        if(settings('enable_kyc_verification_in_exchange') != ACTIVE){
+            return redirect()->back()->with(RESPONSE_TYPE_ERROR, __('You can\'t send kyc request at this time'));
+        }
+
         $uploadedIdFiles = [];
         foreach ($request->allFiles() as $fieldName => $file) {
             $uploadedIdFiles[$fieldName] = app(FileUploadService::class)->upload($file, config('commonconfig.path_id_image'), $fieldName, 'id', Auth::id(), 'public');

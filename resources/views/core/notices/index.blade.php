@@ -1,6 +1,6 @@
 @extends('layouts.master',['activeSideNav' => active_side_nav()])
 @section('title', $title)
-
+@section('route', $isRoute =true, $routeName = 'Add New Notice', $route = 'notices.create')
 @section('content')
     <div class="container my-5">
         <div class="row">

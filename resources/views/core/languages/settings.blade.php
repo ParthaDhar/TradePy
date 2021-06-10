@@ -1,7 +1,7 @@
 @extends('layouts.master',['activeSideNav' => active_side_nav()])
 
 @section('title', $title)
-
+@section('route', $isRoute =true, $routeName = 'Add New Language', $route = 'languages.create')
 @section('content')
     <div class="container my-5 lf-language-palet">
         <div class="row">
@@ -45,7 +45,7 @@
                                 </span>
                             </div>
                             <input type="text" class="form-control lf-toggle-bg-input lf-toggle-border-color" v-model="searchPhrase"
-                                   @keyup="searchTranslations" placeholder="Search">
+                                   @keyup="searchTranslations" placeholder="{{__('Search')}}">
                         </div>
 
                         <div id="setting-scroll" class="cm-mt-15">

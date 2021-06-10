@@ -4,7 +4,7 @@
     <div class="container my-5">
         @component('components.coin', ['coin' => $coin])
             {{  Form::model($coin, ['route'=>['coins.update', $coin->symbol], 'method' => 'put',
-                        'class'=>'form-horizontal validator-form', 'enctype'=>'multipart/form-data', 'coinForm']) }}
+                        'class'=>'form-horizontal validator-form', 'id'=>'coinForm', 'enctype'=>'multipart/form-data']) }}
             @include('coins.admin._form')
             {{ Form::close() }}
         @endcomponent

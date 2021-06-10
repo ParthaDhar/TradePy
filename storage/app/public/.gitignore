@@ -1,3 +1,5 @@
 *
 !.gitignore
 !images/
+!css/
+!page_language/
